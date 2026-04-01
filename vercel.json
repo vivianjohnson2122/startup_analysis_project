@@ -1,14 +1,18 @@
 {
-    "builds": [
-      {
-        "src": "startup_dashboard.py",
-        "use": "@vercel/python"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "startup_dashboard.py"
-      }
-    ]
-  }
+  "builds": [
+    {
+      "src": "startup_dashboard.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "startup_dashboard.py"
+    }
+  ]
+}
