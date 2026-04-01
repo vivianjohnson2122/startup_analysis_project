@@ -2,7 +2,10 @@
   "builds": [
     {
       "src": "startup_dashboard.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": ["assets/**"]
+      }
     }
   ],
   "routes": [
