@@ -1,0 +1,7 @@
+highest_round,company_count,avg_efficiency,avg_funding_raised,acquired_count
+0. Seed Only,4437,29.53,1264665.0,217
+0. Venture Only,5404,27.78,10762533.0,400
+1. Series A,2811,29.54,9459355.0,379
+2. Series B,1985,31.34,25650370.0,417
+3. Series C,1263,32.87,47224107.0,303
+4. Series D+,948,33.69,95268126.0,205

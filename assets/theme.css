@@ -1,0 +1,110 @@
+/* ── Google Font ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DROPDOWN — dark theme
+   Targets Dash's react-select v1 class names (used in all Dash 2.x versions)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Outer wrapper */
+.dark-dropdown .Select,
+.dark-dropdown .Select.is-focused,
+.dark-dropdown .Select.is-open {
+    background-color: #111827 !important;
+}
+
+/* Control box (the visible input area) */
+.dark-dropdown .Select-control {
+    background-color: #1C2A3F !important;
+    border: 1px solid #2E4060 !important;
+    border-radius: 8px !important;
+    color: #E8EEF7 !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    min-height: 40px !important;
+}
+.dark-dropdown .Select-control:hover {
+    border-color: #4DA8FF !important;
+}
+.dark-dropdown .Select.is-focused > .Select-control,
+.dark-dropdown .Select.is-focused:not(.is-open) > .Select-control {
+    border-color: #4DA8FF !important;
+    box-shadow: 0 0 0 2px rgba(77,168,255,0.2) !important;
+    background-color: #1C2A3F !important;
+}
+.dark-dropdown .Select.is-open > .Select-control {
+    background-color: #1C2A3F !important;
+    border-color: #4DA8FF !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Selected value text */
+.dark-dropdown .Select-value,
+.dark-dropdown .Select-value-label,
+.dark-dropdown .Select-single-value,
+.dark-dropdown .Select--single > .Select-control .Select-value {
+    color: #E8EEF7 !important;
+    line-height: 40px !important;
+}
+
+/* Placeholder text */
+.dark-dropdown .Select-placeholder {
+    color: #6B7FA3 !important;
+    line-height: 40px !important;
+}
+
+/* Arrow icon */
+.dark-dropdown .Select-arrow-zone .Select-arrow {
+    border-top-color: #6B7FA3 !important;
+}
+.dark-dropdown .Select.is-open .Select-arrow-zone .Select-arrow {
+    border-bottom-color: #6B7FA3 !important;
+    border-top-color: transparent !important;
+}
+.dark-dropdown .Select-arrow-zone:hover .Select-arrow {
+    border-top-color: #E8EEF7 !important;
+}
+
+/* Dropdown menu panel */
+.dark-dropdown .Select-menu-outer {
+    background-color: #1C2A3F !important;
+    border: 1px solid #2E4060 !important;
+    border-top: none !important;
+    border-bottom-left-radius: 8px !important;
+    border-bottom-right-radius: 8px !important;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5) !important;
+    z-index: 1000 !important;
+}
+.dark-dropdown .Select-menu {
+    background-color: #1C2A3F !important;
+    max-height: 280px !important;
+}
+
+/* Individual options */
+.dark-dropdown .Select-option {
+    background-color: #1C2A3F !important;
+    color: #E8EEF7 !important;
+    padding: 10px 14px !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+}
+.dark-dropdown .Select-option:hover,
+.dark-dropdown .Select-option.is-focused {
+    background-color: #243450 !important;
+    color: #E8EEF7 !important;
+}
+.dark-dropdown .Select-option.is-selected {
+    background-color: rgba(0, 229, 160, 0.15) !important;
+    color: #00E5A0 !important;
+}
+.dark-dropdown .Select-option.is-disabled {
+    color: #6B7FA3 !important;
+}
+
+/* Search input inside dropdown */
+.dark-dropdown .Select-input > input {
+    color: #E8EEF7 !important;
+    font-family: 'Inter', sans-serif !important;
+    background: transparent !important;
+}
