@@ -110,7 +110,11 @@ def stat_card(title, value, color=ACCENT):
     })
 
 # ── App ───────────────────────────────────────────────────────────────────────
-app = dash.Dash(__name__)
+app = dash.Dash(
+    __name__,
+    assets_folder='assets',
+    serve_locally=True  
+)
 server = app.server  
 app.title = "Startup Efficiency Analyzer"
 
