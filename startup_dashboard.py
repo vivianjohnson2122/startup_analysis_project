@@ -165,8 +165,7 @@ app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
                         options=[{'label': 'All Industries', 'value': 'ALL'}] +
                                 [{'label': m, 'value': m} for m in markets],
                         value='ALL', clearable=False,
-                        className='dark-dropdown',
-                        style={'fontFamily': FONT},
+                        className='dark-dropdown'
                     )
                 ], style={'flex': '1', 'marginRight': '24px'}),
 
@@ -180,8 +179,7 @@ app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
                         options=[{'label': 'All Statuses', 'value': 'ALL'}] +
                                 [{'label': s.title(), 'value': s} for s in statuses],
                         value='ALL', clearable=False,
-                        className='dark-dropdown',
-                        style={'fontFamily': FONT},
+                        className='dark-dropdown'
                     )
                 ], style={'flex': '1', 'marginRight': '24px'}),
 

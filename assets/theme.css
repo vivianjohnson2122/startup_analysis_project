@@ -18,10 +18,11 @@
     background-color: #1C2A3F !important;
     border: 1px solid #2E4060 !important;
     border-radius: 8px !important;
-    color: #111827 !important;
+    color: #E8EEF7 !important;
     box-shadow: none !important;
     cursor: pointer !important;
     min-height: 40px !important;
+    font-family: 'Inter', sans-serif !important;
 }
 .dark-dropdown .Select-control:hover {
     border-color: #4DA8FF !important;
