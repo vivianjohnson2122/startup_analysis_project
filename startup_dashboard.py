@@ -95,6 +95,7 @@ def stat_card(title, value, color=ACCENT):
 
 # ── App ───────────────────────────────────────────────────────────────────────
 app = dash.Dash(__name__)
+server = app.server  
 app.title = "Startup Efficiency Analyzer"
 
 app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
