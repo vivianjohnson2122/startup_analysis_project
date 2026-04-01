@@ -1,21 +1,21 @@
 city,company_count,avg_efficiency,avg_funding,acquisitions
-Ventura,10,37.13,3263206.0,1
-Dulles,12,36.55,26782742.0,5
 El Segundo,27,35.28,28725159.0,6
-Brisbane,11,34.83,68629110.0,5
-Silver Spring,15,34.78,4284371.0,4
-Chelmsford,11,34.35,51599357.0,5
-Westlake Village,14,34.33,11345968.0,4
-San Juan Capistrano,10,34.3,3116512.0,2
-Annapolis,14,33.55,20324855.0,3
 Venice,33,33.5,6002825.0,5
-Pompano Beach,13,33.24,3141192.0,1
-Calabasas,10,32.87,28107079.0,2
-South Jordan,13,32.64,14433115.0,3
 San Bruno,21,32.63,18534900.0,8
 Culver City,42,32.6,23401804.0,6
-Billerica,15,32.6,36294364.0,5
 Framingham,20,32.55,17055306.0,4
-Acton,14,32.55,28361114.0,3
 Emeryville,40,32.2,27920532.0,8
 Orem,20,32.16,4934242.0,3
+Pasadena,56,32.07,24654353.0,11
+Foster City,37,31.7,20990947.0,9
+Cupertino,61,31.62,17108837.0,17
+Columbia,42,31.47,9407258.0,5
+Torrance,23,31.43,14960636.0,4
+Campbell,54,31.4,22773097.0,15
+Mountain View,419,31.39,20351084.0,86
+Los Gatos,49,31.3,17061900.0,7
+Jersey City,28,31.2,35404332.0,2
+Los Altos,44,31.17,32110514.0,4
+Kirkland,35,31.16,172512120.0,5
+Irving,21,31.09,43883256.0,3
+San Francisco,2247,31.02,16267810.0,325

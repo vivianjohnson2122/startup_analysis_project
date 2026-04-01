@@ -30,6 +30,22 @@ stage['highest_round'] = pd.Categorical(
 )
 stage = stage.sort_values('highest_round')
 
+# ── Pre-compute key insight stats (load-time, filter-independent) ─────────────
+_acq_avg   = leaderboard[leaderboard['status'] == 'acquired']['efficiency_score'].mean()
+_cls_avg   = leaderboard[leaderboard['status'] == 'closed']['efficiency_score'].mean()
+_acq_mult  = _acq_avg / _cls_avg
+
+_top100    = leaderboard.nlargest(100, 'efficiency_score')
+_top100_acq_pct = int(round((_top100['status'] == 'acquired').mean() * 100))
+
+_corr_top  = corr.loc[corr['funding_percentile'] == '5. Top 20%',  'avg_efficiency'].values[0]
+_corr_mid  = corr.loc[corr['funding_percentile'] == '3. Middle 20%','avg_efficiency'].values[0]
+_corr_pct  = (_corr_top - _corr_mid) / _corr_mid * 100
+
+_seriesd_eff  = stage.loc[stage['highest_round'].astype(str) == 'Series D+', 'avg_efficiency'].values[0]
+_seed_eff     = stage.loc[stage['highest_round'].astype(str) == 'Seed Only',  'avg_efficiency'].values[0]
+_seriesd_funding_m = stage.loc[stage['highest_round'].astype(str) == 'Series D+', 'avg_funding_raised'].values[0] / 1e6
+
 # ── Color palette ─────────────────────────────────────────────────────────────
 STATUS_COLORS = {
     'acquired':  '#00E5A0',
@@ -187,12 +203,145 @@ app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
             'gap': '16px', 'marginBottom': '24px'
         }),
 
+        # ── Key Insights ──────────────────────────────────────────────────────
+        html.Div([
+            html.Div([
+                html.Span('◉', style={'color': ACCENT, 'fontSize': '13px', 'marginRight': '8px'}),
+                html.Span('KEY INSIGHTS', style={
+                    'color': ACCENT, 'fontSize': '11px', 'fontWeight': '700',
+                    'letterSpacing': '2px', 'fontFamily': FONT,
+                }),
+            ], style={'marginBottom': '14px'}),
+            html.Div([
+                # Insight 1
+                html.Div([
+                    html.Div('01', style={
+                        'color': ACCENT, 'fontSize': '10px', 'fontWeight': '700',
+                        'fontFamily': FONT, 'letterSpacing': '1px',
+                        'minWidth': '24px', 'marginTop': '1px',
+                    }),
+                    html.P([
+                        html.Strong(f'Acquired companies score {_acq_mult:.1f}× higher ',
+                                    style={'color': TEXT}),
+                        f'than closed ones ({_acq_avg:.0f} vs {_cls_avg:.0f} avg efficiency score). '
+                        'Outcome is the single strongest predictor of capital efficiency.',
+                    ], style={'margin': '0', 'color': SUBTEXT, 'fontSize': '13px',
+                              'lineHeight': '1.5', 'fontFamily': FONT}),
+                ], style={'display': 'flex', 'gap': '12px', 'marginBottom': '12px'}),
+
+                # Insight 2
+                html.Div([
+                    html.Div('02', style={
+                        'color': ACCENT2, 'fontSize': '10px', 'fontWeight': '700',
+                        'fontFamily': FONT, 'letterSpacing': '1px',
+                        'minWidth': '24px', 'marginTop': '1px',
+                    }),
+                    html.P([
+                        html.Strong('Series D+ companies are the most capital-efficient ',
+                                    style={'color': TEXT}),
+                        f'(avg score {_seriesd_eff:.1f}) despite raising ${_seriesd_funding_m:.0f}M on average — '
+                        'late-stage funding follows proven quality, not the other way around.',
+                    ], style={'margin': '0', 'color': SUBTEXT, 'fontSize': '13px',
+                              'lineHeight': '1.5', 'fontFamily': FONT}),
+                ], style={'display': 'flex', 'gap': '12px', 'marginBottom': '12px'}),
+
+                # Insight 3
+                html.Div([
+                    html.Div('03', style={
+                        'color': '#FFD700', 'fontSize': '10px', 'fontWeight': '700',
+                        'fontFamily': FONT, 'letterSpacing': '1px',
+                        'minWidth': '24px', 'marginTop': '1px',
+                    }),
+                    html.P([
+                        html.Strong(f'Top-funded companies score only {_corr_pct:.0f}% above the median ',
+                                    style={'color': TEXT}),
+                        f'({_corr_top:.1f} vs {_corr_mid:.1f}). '
+                        'Raising more capital does not reliably translate into higher efficiency.',
+                    ], style={'margin': '0', 'color': SUBTEXT, 'fontSize': '13px',
+                              'lineHeight': '1.5', 'fontFamily': FONT}),
+                ], style={'display': 'flex', 'gap': '12px'}),
+
+            ]),
+        ], style={
+            'background': CARD_BG, 'border': f'1px solid {BORDER}',
+            'borderLeft': f'3px solid {ACCENT}',
+            'borderRadius': '12px', 'padding': '20px 24px', 'marginBottom': '20px',
+        }),
+
+        # ── Methodology Banner ─────────────────────────────────────────────────
+        html.Div([
+
+            # Title
+            html.Span("How Efficiency Score Works", style={
+                'color': '#00f5a0', 'fontWeight': '700',
+                'fontSize': '13px', 'letterSpacing': '0.08em',
+                'display': 'block', 'marginBottom': '8px'
+            }),
+
+            # Description + bullets
+            html.Span("The efficiency score is a weighted average of key startup performance factors:", style={
+                'color': '#8892a4', 'fontSize': '13px', 'display': 'block', 'marginBottom': '6px'
+            }),
+            html.Ul([
+                html.Li("Status (40%): the outcome of the startup (acquired, closed, operating)", style={'marginBottom': '3px'}),
+                html.Li("Funding Per Round (25%) : A proxy for capital efficieny. The total funding in usd divided by the total number of funding rounds", style={'marginBottom': '3px'}),
+                html.Li("Speed to First Funding (20%): How quickly after founding did the startup attract investors.", style={'marginBottom': '3px'}),
+                html.Li("Founding Window (15%): Days between first round of funding and last round of funding.", style={'marginBottom': '3px'}),
+            ], style={
+                'color': '#8892a4', 'fontSize': '13px',
+                'margin': '0 0 12px 0', 'paddingLeft': '18px',
+                'listStyleType': 'disc'
+            }),
+
+            # Pills + GitHub link (bottom)
+            html.Div([
+                *[html.Span(tech, style={
+                    'background': '#1e2d3d', 'color': '#00c9ff',
+                    'padding': '3px 10px', 'borderRadius': '999px',
+                    'fontSize': '12px', 'marginRight': '6px'
+                }) for tech in [
+                    "Python",
+                    "SQL",
+                    "Data Analysis",
+                    "pandas",
+                    "Crunchbase 2013",
+                    "23,243 companies",
+                ]],
+                html.A("View on GitHub →", href="https://github.com/vivianjohnson2122/startup_analysis_project",
+                    style={'color': '#00f5a0', 'fontSize': '12px',
+                            'marginLeft': '8px', 'textDecoration': 'none'})
+            ], style={
+                'display': 'flex', 'alignItems': 'center', 'flexWrap': 'wrap', 'gap': '6px'
+            })
+
+        ], style={
+            'display': 'flex', 'flexDirection': 'column',
+            'background': '#0d1b2a', 'border': '1px solid #1a2f45',
+            'borderLeft': '3px solid #00f5a0',
+            'borderRadius': '8px', 'padding': '16px 20px',
+            'marginBottom': '24px',
+        }),
+
         # ── Row 1: Leaderboard + Industry ─────────────────────────────────────
         html.Div([
             html.Div([card([
                 label('Top Companies — Efficiency Leaderboard'),
+                html.Div([
+                    html.Span('★', style={'color': STATUS_COLORS['acquired'],
+                                          'marginRight': '6px', 'fontSize': '12px'}),
+                    html.Span(
+                        f'{_top100_acq_pct}% of the top 100 scorers were acquired — '
+                        'acquisition is the strongest efficiency signal in the dataset.',
+                        style={'color': STATUS_COLORS['acquired'], 'fontSize': '12px',
+                               'fontFamily': FONT, 'fontStyle': 'italic'},
+                    ),
+                ], style={
+                    'background': 'rgba(0,229,160,0.07)',
+                    'border': f'1px solid {STATUS_COLORS["acquired"]}44',
+                    'borderRadius': '6px', 'padding': '8px 12px', 'marginBottom': '12px',
+                }),
                 dcc.Graph(id='leaderboard-chart', config={'displayModeBar': False},
-                          style={'height': '500px'})
+                          style={'height': '480px'})
             ])], style={'flex': '1.2', 'marginRight': '20px'}),
 
             html.Div([card([
@@ -219,7 +368,14 @@ app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
 
         # ── Row 3: City ───────────────────────────────────────────────────────
         card([
-            label('Top Cities by Average Efficiency Score'),
+            html.Div([
+                label('Top Cities by Average Efficiency Score'),
+                html.Span('min. 20 companies per city', style={
+                    'color': SUBTEXT, 'fontSize': '11px', 'fontFamily': FONT,
+                    'marginLeft': '10px', 'background': '#1E2D45',
+                    'padding': '2px 8px', 'borderRadius': '4px',
+                }),
+            ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '4px'}),
             dcc.Graph(id='city-chart', config={'displayModeBar': False},
                       style={'height': '360px'})
         ]),
@@ -301,9 +457,8 @@ def update_all(market, status, min_score):
             colorscale=[[0, '#1E2D45'], [1, ACCENT]],
             line=dict(width=0)
         ),
-        text=ind['company_count'].apply(lambda x: f'{x} cos'),
-        textposition='inside', textfont=dict(size=9, color='white'),
-        hovertemplate='<b>%{y}</b><br>Avg Score: %{x:.1f}<br>%{text}<extra></extra>'
+        customdata=ind['company_count'],
+        hovertemplate='<b>%{y}</b><br>Avg Score: %{x:.1f}<br>%{customdata} companies<extra></extra>'
     ))
     fig_ind.update_layout(**PLOT_LAYOUT)
     fig_ind.update_xaxes(title_text='Avg Efficiency Score')
@@ -337,6 +492,16 @@ def update_all(market, status, min_score):
     )
 
     # ── Correlation ───────────────────────────────────────────────────────────
+    top20_score = corr.loc[corr['funding_percentile'] == '5. Top 20%', 'avg_efficiency'].values[0]
+    mid_score   = corr.loc[corr['funding_percentile'] == '3. Middle 20%', 'avg_efficiency'].values[0]
+    pct_higher  = (top20_score - mid_score) / mid_score * 100
+
+    y_min = corr['avg_efficiency'].min()
+    y_max = corr['avg_efficiency'].max()
+    y_pad = (y_max - y_min) * 0.15
+    y_axis_min = round(y_min - y_pad * 2, 1)
+    y_axis_max = round(y_max + y_pad * 4, 1)
+
     fig_corr = go.Figure(go.Bar(
         x=corr['funding_percentile'],
         y=corr['avg_efficiency'],
@@ -349,15 +514,27 @@ def update_all(market, status, min_score):
         textposition='outside', textfont=dict(size=10, color=TEXT),
         hovertemplate='<b>%{x}</b><br>Avg Efficiency: %{y:.2f}<extra></extra>'
     ))
-    corr_layout = {k: v for k, v in PLOT_LAYOUT.items() if k not in ('xaxis', 'yaxis')}
+    fig_corr.add_annotation(
+        text=f'Top 20% of funders score <b>{pct_higher:.0f}% higher</b> than the median',
+        xref='paper', yref='paper', x=0.5, y=1.0,
+        showarrow=False,
+        font=dict(size=11, color=ACCENT, family=FONT),
+        bgcolor='rgba(0,229,160,0.08)',
+        bordercolor=ACCENT, borderwidth=1, borderpad=6,
+        align='center',
+    )
+    corr_layout = {k: v for k, v in PLOT_LAYOUT.items() if k not in ('xaxis', 'yaxis', 'margin')}
     fig_corr.update_layout(
         **corr_layout,
         xaxis=dict(title='Funding Percentile', gridcolor='rgba(0,0,0,0)', tickangle=-10),
-        yaxis=dict(title='Avg Efficiency Score', gridcolor=BORDER),
+        yaxis=dict(title='Avg Efficiency Score', gridcolor=BORDER,
+                   range=[y_axis_min, y_axis_max]),
+        margin=dict(l=10, r=10, t=50, b=10),
     )
 
     # ── City ──────────────────────────────────────────────────────────────────
-    city_top = city.nlargest(20, 'avg_efficiency').sort_values('avg_efficiency', ascending=False)
+    city_top = city[city['company_count'] >= 20].nlargest(20, 'avg_efficiency') \
+                   .sort_values('avg_efficiency', ascending=False)
     fig_city = go.Figure(go.Bar(
         x=city_top['city'],
         y=city_top['avg_efficiency'],
@@ -366,7 +543,7 @@ def update_all(market, status, min_score):
             colorscale=[[0, '#1E2D45'], [0.5, ACCENT2], [1, ACCENT]],
             line=dict(width=0)
         ),
-        text=city_top['company_count'].apply(lambda x: f'{x}'),
+        text=city_top['company_count'].apply(lambda n: f'n={n}'),
         textposition='outside', textfont=dict(size=9, color=SUBTEXT),
         hovertemplate='<b>%{x}</b><br>Avg Score: %{y:.1f}<br>%{text} companies<extra></extra>'
     ))
