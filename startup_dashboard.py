@@ -286,7 +286,7 @@ app.layout = html.Div(style={'backgroundColor': BG, 'minHeight': '100vh',
             }),
             html.Ul([
                 html.Li("Status (40%): the outcome of the startup (acquired, closed, operating)", style={'marginBottom': '3px'}),
-                html.Li("Funding Per Round (25%) : A proxy for capital efficieny. The total funding in usd divided by the total number of funding rounds", style={'marginBottom': '3px'}),
+                html.Li("Funding Per Round (25%) : A proxy for capital efficiency. The total funding in usd divided by the total number of funding rounds", style={'marginBottom': '3px'}),
                 html.Li("Speed to First Funding (20%): How quickly after founding did the startup attract investors.", style={'marginBottom': '3px'}),
                 html.Li("Founding Window (15%): Days between first round of funding and last round of funding.", style={'marginBottom': '3px'}),
             ], style={
